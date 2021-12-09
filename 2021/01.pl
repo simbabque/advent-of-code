@@ -2,12 +2,19 @@ use strict;
 use warnings;
 use feature 'say';
 
+chomp(my @input = <DATA>);
+
 my $prev;
 my $count;
-while (<DATA>) {
-    chomp;
-    $count++ if $prev && $prev < $_;
-    $prev = $_;
+for (my $i = 0; $i < @input; $i++) {
+
+    # stop if there is no third value
+    last unless $input[$i+2];
+
+    my $current = $input[$i] + $input[$i+1] + $input[$i+2];
+
+    $count++ if $prev && $prev < $current;
+    $prev = $current;
 }
 
 say $count;
