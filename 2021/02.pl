@@ -6,15 +6,17 @@ chomp(my @input = <DATA>);
 
 my $depth = 0;
 my $horizontal_position = 0;
+my $aim = 0;
 foreach my $line (@input) {
     my ($direction, $value) = split /\s/, $line;
 
     if ($direction eq 'forward') {
         $horizontal_position += $value;
+        $depth += $aim * $value;
     } elsif ($direction eq 'down') {
-        $depth += $value;
+        $aim += $value
     } elsif ($direction eq 'up') {
-        $depth -= $value;
+        $aim -= $value;
     }
 }
 
