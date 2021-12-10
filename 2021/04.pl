@@ -24,7 +24,8 @@ while (my $row = <DATA>) {
 my $win;
 my $score;
 NUMBER: foreach my $number (@numbers) {
-    foreach my $card (@cards) {
+    foreach my $index (0 .. $#cards) {
+        my $card = $cards[$index];
         ROW: foreach my $row (@$card) {
             foreach my $value (@$row) {
                 $value = 'x' if $value eq $number;
@@ -46,9 +47,12 @@ NUMBER: foreach my $number (@numbers) {
         }
 
         if ($win) {
-            say $number;
             $score = sum(grep m/\d/, map { @$_ } @$card) * $number;
-            last NUMBER;
+
+            # remove the card that has won and go again
+            splice @cards => $index, 1;
+            $win = 0;
+            redo NUMBER;
         }
     }
 }
