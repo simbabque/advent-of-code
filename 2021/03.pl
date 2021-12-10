@@ -17,6 +17,51 @@ my $gamma = join '', map { $_->{1} > $_->{0} ? 1 : 0 } @$counts;
 
 say "part 1: ", oct('0b' . $gamma) * oct('0b' . $epsilon);
 
+my %oxygen = map {$_ => 1} @input;
+foreach my $i ( 0 .. length($input[0])) {
+    my $current_counts;
+    foreach my $line (keys %oxygen) {
+        my @bits = split //, $line;
+        for (my $i = 0; $i < @bits; $i++) {
+            $current_counts->[$i]->{$bits[$i]}++;
+        }
+    }
+
+    my $keep = $current_counts->[$i]->{1} <=> $current_counts->[$i]->{0}; # 1: more 1s, 0: equal, -1: more 0s
+    NUMBER: foreach my $number (keys %oxygen) {
+
+        next NUMBER if (substr($number, $i, 1) eq ($keep == -1 ? 0 : 1));
+        delete $oxygen{$number};
+    }
+    last if keys %oxygen == 1;
+}
+
+( my $oxygen_value ) = keys %oxygen;
+
+my %scrubber = map {$_ => 1} @input;
+foreach my $i ( 0 .. length($input[0])) {
+    my $current_counts;
+    foreach my $line (keys %scrubber) {
+        my @bits = split //, $line;
+        for (my $i = 0; $i < @bits; $i++) {
+            $current_counts->[$i]->{$bits[$i]}++;
+        }
+    }
+
+    my $keep = $current_counts->[$i]->{1} <=> $current_counts->[$i]->{0}; # 1: more 1s, 0: equal, -1: more 0s
+    NUMBER: foreach my $number (keys %scrubber) {
+
+        next NUMBER if (substr($number, $i, 1) eq ($keep == -1 ? 1 : 0));
+        delete $scrubber{$number};
+    }
+    last if keys %scrubber == 1;
+}
+
+( my $scrubber_value ) = keys %scrubber;
+
+say "part 2: ", oct('0b' . $oxygen_value) * oct('0b' . $scrubber_value);
+
+
 __DATA__
 111110110111
 110011001101
